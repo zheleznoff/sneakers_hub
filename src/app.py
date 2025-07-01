@@ -38,6 +38,10 @@ async def health_check() -> Dict[str, Any]:
         "service": "sneaker-library",
     }
 
+@get("/favicon.ico")
+async def favicon() -> None:
+    return None
+
 
 def create_app() -> Litestar:
     """Фабрика для создания приложения Litestar."""
