@@ -4,6 +4,7 @@ from typing import Any, Dict
 from litestar import Litestar, get
 from litestar.config.cors import CORSConfig
 from litestar.openapi import OpenAPIConfig
+from litestar.openapi.plugins import SwaggerRenderPlugin
 
 
 # Временные эндпоинты для демонстрации архитектуры
@@ -29,7 +30,7 @@ async def root() -> Dict[str, Any]:
     }
 
 
-@get("/health")
+@get("/health", tags=["Health"])
 async def health_check() -> Dict[str, Any]:
     """Проверка состояния сервиса."""
     return {
@@ -66,14 +67,15 @@ def create_app() -> Litestar:
             {"name": "Collections", "description": "Операции с коллекциями"},
             {"name": "Health", "description": "Проверка состояния сервиса"},
         ],
+        render_plugins=[SwaggerRenderPlugin()],
     )
 
     # Создание приложения
     app = Litestar(
-        route_handlers=[root, health_check],
+        route_handlers=[root, health_check, favicon],
         cors_config=cors_config,
         openapi_config=openapi_config,
-        debug=True,  # TODO: Убрать в продакшене
+        debug=True,
     )
 
     return app
